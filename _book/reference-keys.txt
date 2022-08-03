@@ -1,0 +1,16 @@
+intro
+single-tree-model
+model-specification
+maths
+posteriors
+posterior-for-tau
+posterior-for-mu_jp
+posterior-for-mu
+a-second-posterior-with-mu_j-marginalised-out
+marginal-distributions-for-y
+log-version-of-the-marginal
+old-marginal-distributions
+algorithm
+initial-results
+bart
+a-bart-version-of-our-hierachical-trees-model

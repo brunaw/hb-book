@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 BART | Mixed BART Models: maths and discussion</title>
+  <meta name="description" content="Chapter 4 BART | Mixed BART Models: maths and discussion" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4 BART | Mixed BART Models: maths and discussion" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4 BART | Mixed BART Models: maths and discussion" />
+  
+  
+  
+
+<meta name="author" content="Bruna Wundervald" />
+
+
+<meta name="date" content="2022-08-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="initial-results.html"/>
+<link rel="next" href="references.html"/>
+<script src="libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Mixed BART book</a></li>
+
+<li class="divider"></li>
+<li><a href="index.html#intro" id="toc-intro"><span class="toc-section-number">1</span> Intro<span></span></a></li>
+<li><a href="single-tree-model.html#single-tree-model" id="toc-single-tree-model"><span class="toc-section-number">2</span> Single tree model<span></span></a>
+<ul>
+<li><a href="single-tree-model.html#model-specification" id="toc-model-specification"><span class="toc-section-number">2.1</span> Model specification<span></span></a></li>
+<li><a href="single-tree-model.html#maths" id="toc-maths"><span class="toc-section-number">2.2</span> Maths<span></span></a></li>
+<li><a href="single-tree-model.html#posteriors" id="toc-posteriors"><span class="toc-section-number">2.3</span> Posteriors<span></span></a></li>
+<li><a href="single-tree-model.html#posterior-for-tau" id="toc-posterior-for-tau"><span class="toc-section-number">2.4</span> Posterior for <span class="math inline">\(\tau\)</span><span></span></a></li>
+<li><a href="single-tree-model.html#posterior-for-mu_jp" id="toc-posterior-for-mu_jp"><span class="toc-section-number">2.5</span> Posterior for <span class="math inline">\(\mu_j,p\)</span><span></span></a></li>
+<li><a href="single-tree-model.html#posterior-for-mu" id="toc-posterior-for-mu"><span class="toc-section-number">2.6</span> Posterior for <span class="math inline">\(\mu\)</span><span></span></a></li>
+<li><a href="single-tree-model.html#a-second-posterior-with-mu_j-marginalised-out" id="toc-a-second-posterior-with-mu_j-marginalised-out"><span class="toc-section-number">2.7</span> A second posterior, with <span class="math inline">\(\mu_j\)</span> marginalised out<span></span></a></li>
+<li><a href="single-tree-model.html#marginal-distributions-for-y" id="toc-marginal-distributions-for-y"><span class="toc-section-number">2.8</span> Marginal Distributions for y<span></span></a>
+<ul>
+<li><a href="single-tree-model.html#log-version-of-the-marginal" id="toc-log-version-of-the-marginal"><span class="toc-section-number">2.8.1</span> log version of the marginal:<span></span></a></li>
+<li><a href="single-tree-model.html#old-marginal-distributions" id="toc-old-marginal-distributions"><span class="toc-section-number">2.8.2</span> (Old) Marginal Distributions<span></span></a></li>
+</ul></li>
+<li><a href="single-tree-model.html#algorithm" id="toc-algorithm"><span class="toc-section-number">2.9</span> Algorithm<span></span></a></li>
+</ul></li>
+<li><a href="initial-results.html#initial-results" id="toc-initial-results"><span class="toc-section-number">3</span> Initial results<span></span></a></li>
+<li><a href="bart.html#bart" id="toc-bart"><span class="toc-section-number">4</span> BART<span></span></a>
+<ul>
+<li><a href="bart.html#a-bart-version-of-our-hierachical-trees-model" id="toc-a-bart-version-of-our-hierachical-trees-model"><span class="toc-section-number">4.1</span> A BART version of our hierachical trees model<span></span></a></li>
+</ul></li>
+<li><a href="references.html#references" id="toc-references">References<span></span></a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/brunaw/mixed_bart" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Mixed BART Models: maths and discussion</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="bart" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">Chapter 4</span> BART<a href="bart.html#bart" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="a-bart-version-of-our-hierachical-trees-model" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> A BART version of our hierachical trees model<a href="bart.html#a-bart-version-of-our-hierachical-trees-model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Let’s define:</p>
+<ul>
+<li>P to be the number of trees</li>
+<li>J to be the total number of groups</li>
+<li><span class="math inline">\(\Theta\)</span> will be the set of node hyperparameters
+<ul>
+<li><span class="math inline">\(\mu\)</span> and <span class="math inline">\(\mu_j\)</span> for each tree in 1 to P</li>
+</ul></li>
+</ul>
+<p>We have a variable of interest for which we assume:</p>
+<p><span class="math display">\[\begin{equation}
+
+y_{ij} = \sum_{p = 1}^{P} \overbrace{\mathbb{G}}^\text{Tree look up function}(\underbrace{X_{ij}}_\text{Covariates}, \overbrace{T_{p}}^\text{Tree structure}, \overbrace{\Theta_{p}}^\text{Terminal node parameters}) + \underbrace{\epsilon_{ij}}_\text{Noise}
+\end{equation}\]</span></p>
+<p>for observation <span class="math inline">\(i = i, \dots, n_j\)</span> in group <span class="math inline">\(j = 1, \dots, J\)</span>. We also have
+that:</p>
+<p><span class="math display">\[\begin{equation}
+\epsilon_{ij} \sim N(0, \tau^{-1}),
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\tau^{-1}\)</span> is the residual precision. In this setting, <span class="math inline">\(\Theta_{p}\)</span> will represent the terminal node parameters + the individual group parameters for
+tree <span class="math inline">\(p\)</span>.</p>
+<p>For a single terminal node, let:</p>
+<p><span class="math display">\[\begin{equation}
+R_{ijp1} = Y_{ij}^{(1)} - \sum_{t \neq p} \mathbb{G}(X_{ij}^{(1)}, T_{t}, M_{t})
+\end{equation}\]</span></p>
+<p>which represents the <strong>partial residuals</strong> for observation i, in group j, for
+tree p in terminal node 1. Now, let</p>
+<p><span class="math display">\[\begin{equation}
+\underset{\sim}{R_j} =  \{R_{ij}, \dots, j = 1,\dots, J \}
+\end{equation}\]</span></p>
+<p>then</p>
+<p><span class="math display">\[\begin{equation}
+\underset{\sim}{R_j} \sim N(\mu_j, \tau^{-1}), \\
+\mu_j \sim N(\mu, k_1\tau^{-1}/P), \text{(P = number of trees)} \\
+\mu \sim N(0, k_2 \tau^{-1}/P)\\
+\end{equation}\]</span></p>
+<p>using the same marginalisation as for a single tree:</p>
+<p><span class="math display">\[\begin{equation}
+\underset{\sim}{R_j} \sim MVN(\mu \mathbf{1}, \tau^{-1} (k_1MM^{T} + \mathbb{I})), \text{(M = group model matrix)}\\
+\text{using the same trick as before and } \Psi =  k_1 MM^{T} + \mathbb{I}: \\
+\underset{\sim}{R_j} \sim MVN(0, \tau^{-1} (\Psi + k_2  \mathbf{1}\mathbf{1}^{T})),
+\end{equation}\]</span></p>
+<p>which is used to get the marginal distribution of a new tree. The new
+posterior updates will be:</p>
+<p><span class="math display">\[\begin{equation}
+\mu | \dots \sim MVN(
+\frac{\mathbf{1}^{T} \Psi^{-1} R }{\tau \Psi^{-1} \mathbf{1} + k_2^{-1} M^{-1}},
+\tau^{-1} (\mathbf{1}^{T} \Psi^{-1} \mathbf{1} + k_2^{-1} M^{-1})),
+\end{equation}\]</span></p>
+<p><span class="math display">\[\begin{equation}
+\mu_j | \dots \sim MVN(
+\frac{\mu k_1 + \bar R_j n_j}{(n_j + k_1^{-1})},
+\tau^{-1} (n_j + k_1^{-1}))
+\end{equation}\]</span></p>
+<p>The update for <span class="math inline">\(\tau\)</span> will be a little different. Let <span class="math inline">\(\hat f_{ij}\)</span> be
+the overall prediction for observation <span class="math inline">\(R_{ij}\)</span> at the current iteration:</p>
+<p><span class="math display">\[\begin{equation}
+\tau | \dots \sim Ga(
+\frac{n + P + 1}{2} + \alpha,
+\frac{\sum_{i, j} (y_{ij} - \hat f_{ij})^2}{2} +
+\frac{\sum_{j, p} (\mu_{jp} - \mu_{p})^2}{2} +
+\frac{\sum_{j, p} \mu_{p}^2}{2} + \beta
+)
+\end{equation}\]</span></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="initial-results.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["book2.pdf", "book2.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

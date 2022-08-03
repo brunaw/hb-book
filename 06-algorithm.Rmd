@@ -1,0 +1,70 @@
+## Algorithm
+
+************************************************
+**Algorithm type**:  Metropolis within GIBBS for a hierachical Bayesian (single) tree
+
+**Reason**: We have closed posteriors for most parameters, but not for the tree structure
+
+**Data**: Target variable $y$, groups $j = 1,\dots,m$, set of 
+features X
+
+**Result**: Posterior distributions for all parameters
+
+************************************************
+**Initialisation**; 
+
+Hyper-parameters values for $\alpha, \beta, k_1, k_2$;
+
+Number of groups $m$;
+
+Number of observations $N =\sum_{j = 1}^{m} n_j$; 
+
+Number of iterations I; 
+
+
+- define $\mu_{\mu} = 0$, $\mu^{0}$, $\tau^{0}$, and $\mu_j^{0}, j = 1,\dots, m$
+as the initial parameter values 
+  
+- **for** i from 1 to I **do**:
+  
+  - grow a new $T^{\text{new}}$ tree by either growing, pruning, changing
+  or swapping a root node
+  
+
+  
+  - set $l_{\text{new}}$ = log full conditional for the
+  new (candidate) tree 
+
+<center>
+$l_{\text{new}} = \sum_{l = 1}^{b_{\text{new}}} -\frac{1}{2} \log(|\boldsymbol{W}_{1,l}|) + 
+\log(\Gamma(N_l/2 + \alpha))$
+$-(N_l/2 + \alpha)\left[ \log \beta + \log\Big(\frac{(\mathbf{y}_l - \mathbf{W}_{0,l})^T \mathbf{W}_{1,l}^{-1} (\mathbf{y}_l - \mathbf{W}_{0,l})}{2} \Big) \right]$
+</center>    
+    
+  - set $l_{\text{old}}$ = log full conditional for the
+previous tree 
+
+<center>
+$l_{\text{old}} = \sum_{l = 1}^{b_{\text{old}}} -\frac{1}{2} \log(|\boldsymbol{W}_{1,l}|) + 
+\log(\Gamma(N_l/2 + \alpha))$
+$-(N_l/2 + \alpha)\left[ \log \beta + \log\Big(\frac{(\mathbf{y}_l - \mathbf{W}_{0,l})^T \mathbf{W}_{1,l}^{-1} (\mathbf{y}_l - \mathbf{W}_{0,l})}{2} \Big) \right]$
+</center>   
+
+  - set $a = \exp(l_{\text{new}} - l_{\text{old}})$ 
+  - generate $u \sim U[0, 1]$
+  - **if** $u < a$ **then**:
+    - set $T = T^{\text{new}}$
+  - **end**  
+  
+- sample $\mu$ from the posterior $N(\frac{(\tau/k_1) \bar \mu m}{\tau(\frac{1}{k_2} + \frac{m}{k_1})}, (\tau(\frac{1}{k_2} + \frac{m}{k_1}) )^{-1})$ (because of $\bar \mu$)
+  
+- **for** j in 1:m **do**:
+  - sample $\mu_j$ from the posterior $N(\frac{\mu/k_1 +  \bar y_j n_j}{n_j + 1/k_1}, ((n_j + \frac{1}{k_1})\tau)^{-1})$
+- **end**
+  
+- sample $\tau$ from the posterior $\text{Gamma}\Big(n/2 + \alpha, \beta + \frac{(\mathbf{y} - \mathbf{W}_0)^T \mathbf{W}_1^{-1} (\mathbf{y} - \mathbf{W}_0)}{2}\Big)$
+    
+
+
+  
+- **end**

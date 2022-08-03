@@ -1,0 +1,4 @@
+# Initial results 
+
+Available at: https://github.com/brunaw/mixed_bart/tree/master/results
+

@@ -72,7 +72,7 @@ Q \propto \Big[ (\frac{\tau}{k_2} + \frac{\tau m}{(k_1/P)}) \mu^2 -
 
 
 Q \propto (\tau(\frac{m}{(k_1/P)} + \frac{1}{k_2}))(\mu - 
-\frac{(\tau m/(k_1/P)) \bar \mu}{\tau(\frac{m}{(k_1/P)} + \frac{1}{k_2})})^2 
+\frac{\bar \mu  m/(k_1/P) }{\tau(\frac{m}{(k_1/P)} + \frac{1}{k_2})})^2 
 \end{equation}
 
 
@@ -80,7 +80,7 @@ Q \propto (\tau(\frac{m}{(k_1/P)} + \frac{1}{k_2}))(\mu -
 So for $\mu$ we have that the conditional distribution: 
 
 $$\mu | \mu_1, \dots, \mu_{m}, \mu_{\mu}, k_1, k_2, \tau \sim N(
-\frac{(\tau m /(k_1/P)) \bar \mu}{\tau(\frac{m}{(k_1/P)} + \frac{1}{k_2})},
+\frac{\bar \mu m /(k_1/P) }{\tau(\frac{m}{(k_1/P)} + \frac{1}{k_2})},
 \tau(\frac{m}{(k_1/P)} + \frac{1}{k_2})^{-1})$$
 
 
